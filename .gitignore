@@ -1,0 +1,16 @@
+# Build artifacts
+build/
+*.bin
+*.o
+*.vcd
+*.out
+# Verilog simulation
+vvp
+*.daidir
+# Editor / OS
+.DS_Store
+*.swp
+*.swo
+~*.tmp
+# Logs
+*.log
