@@ -16,3 +16,8 @@
 - Test coverage.
 
 Please open an issue before starting large changes.
+
+## Code style
+
+Follow the existing indentation and naming conventions. Keep commits focused
+on a single change.
