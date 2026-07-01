@@ -1,32 +1,41 @@
-# BADD Architecture
+# Micro-kernel Architecture
 
 ## Overview
 
-BADD (Binary Arithmetic Dual-Domain) is a proof-of-concept 5-bit CPU built
-around the ThinkerBinary encoding. The native word is exactly five bits:
+ScratchToTheMAX is built around a micro-kernel. The kernel is deliberately
+small and implements only what cannot be done in user space:
 
-- `word[4:3]` — type tag (`11` direct syntax, `10` number, `01` letter,
-  `00` extended)
-- `word[2:0]` — payload (opcode index, literal 0–7, variable index a–h,
-  or extended payload)
+- thread scheduling
+- address-space management
+- inter-process communication (IPC)
+- interrupt and exception dispatch
 
-## Blocks
+Everything else - device drivers, filesystems, network stacks, the shell - runs
+as a user-space server. Servers talk to the kernel and to each other through
+message passing, so a crash in one server does not bring down the whole system.
 
-- **Top level** — `badd_chip.v`: ALU, memory controller, SATA, LED15, INJ,
-  BOR, MPU.
-- **Johnsan decoder** — `src/verilog/johnsan_decode.v`: stateless decode of
-  one 5-bit word into `kind`, `code`, `is_delim`; `johnsan_decode_ext`
-  resolves extended opcodes with the pending-prefix rule.
-- **Memory** — bit-addressable 6T SRAM, hierarchical decoder, sense amps,
-  14-bit address space (16K words of 5-bit data).
-- **eFlash** — dual bank (A/B), 4K words each, INJ live update, commit at
-  `0x0FFF`.
-- **BOR** — brown-out reset asserts reset and `flash_lock` while supply sags.
-- **MPU** — protects window `0x0F00`–`0x0FFF` from writes.
-- **PUF** — SRAM power-up state fingerprint, 256-entry x 64-bit table model.
+## Layers
 
-## Known PoC limitations
+1. Hardware: BADD CPU (5-bit ThinkerBinary, RUN ISA).
+2. Johnsan kernel: micro-kernel running in supervisor mode.
+3. Servers: user-space drivers and services.
+4. Applications: Johnsan programs compiled to ThinkerBinary.
 
-SATA, IRQ, JTAG, stores (WR/RD), branch execution (IF/THEN/GOTO), MPU
-fault observation, and eFlash bank switching are not wired in GEN1. These are
-implementation gaps, not encoding gaps.
+## Isolation
+
+Each server and application runs in its own address space. The kernel enforces
+isolation through the BADD MPU and memory-management primitives. IPC messages
+are copied between address spaces so servers cannot observe each other's memory
+directly.
+
+## Boot sequence
+
+1. BADD CPU comes out of reset and enters supervisor mode.
+2. The Johnsan kernel initializes the scheduler, memory manager, and IPC.
+3. The kernel starts the root server (init).
+4. init starts the remaining servers and the first application.
+
+## Why micro-kernel
+
+A small kernel is easier to verify, audit, and trust. It also makes the system
+extensible: new servers can be added without touching the kernel.
