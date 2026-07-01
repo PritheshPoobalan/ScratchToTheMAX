@@ -1,54 +1,50 @@
 # Johnsan Language Specification
 
-Johnsan is the human-readable source language for the BADD 5-bit RUN CPU.
-Every Johnsan statement ends with the PARSE delimiter `|`. The system
-microcode layer translates Johnsan source into a stream of 5-bit ThinkerBinary
-words before the CPU ever sees it.
+Johnsan is the source language for the BADD CPU. It compiles to 5-bit
+ThinkerBinary words of the RUN architecture.
 
-## Vocabulary
+## Word encoding
 
-| Johnsan | Meaning | Encoding |
-|---------|---------|----------|
-| STRT | Start marker | direct `11000` |
-| AD | Add | direct `11001` |
-| TI | Times (multiply by repeated addition) | direct `11010` |
-| PR | Print to ACC and LED15 | direct `11011` |
-| VAR | Declare / assign variable | direct `11100` |
-| % | Open bracket | direct `11101` |
-| $ | Close bracket | direct `11110` |
-| \| | PARSE delimiter | direct `11111` |
-| END | End program / halt | ext `00000 00001` |
-| MN | Minus / subtract | ext `00000 00010` |
-| DV | Divide | ext `00000 00011` |
-| EQU | Equals / assignment operator | ext `00000 00100` |
-| IF | Conditional test | ext `00000 00101` |
-| THEN | Conditional branch target | ext `00000 00110` |
-| GOTO | Unconditional jump | ext `00000 00111` |
+Each ThinkerBinary word is 5 bits:
 
-The remaining sixteen vocabulary entries (IM, EX, RD, WR, FC, WT, DEF, TO,
-LIB, CONT, FND, INJ, RUN, RPT, LOP, RET) are reserved on the two planned
-escape pages and are documentation-only in GEN1.
+| tag [4:3] | kind     | payload [2:0]         |
+|-----------|----------|-----------------------|
+| 11        | opcode   | direct opcode 000-111 |
+| 10        | number   | literal 0-7           |
+| 01        | letter   | variable a-h          |
+| 00        | extended | prefix or opcode      |
 
-## Statement forms
+## Direct syntax opcodes
 
-```
-STRT |
-VAR a EQU 5 |
-VAR b 3 |
-VAR c EQU a AD b |
-PR c |
-END |
-```
+- STRT (11000) - start program
+- AD   (11001) - add
+- TI   (11010) - store/input
+- PR   (11011) - print
+- VAR  (11100) - declare variable
+- %    (11101) - modulo
+- $    (11110) - indirection
+- \|   (11111) - PARSE delimiter
 
-- `VAR` requires the next token to be a letter (`a`–`h`). `EQU` is optional.
-- `PR` evaluates the tokens after `PR` and writes the result to ACC and LED15.
-- A group whose first token is an arithmetic operator is a leading expression
-  and writes ACC.
-- `END` halts the core with status `0xFF`.
+## Extended opcodes
 
-## Values and ranges
+Extended opcodes are two words: prefix `00000` followed by a payload word:
 
-Variables `a`–`h` and ACC are 5 bits (0–31). Arithmetic wraps modulo 32.
-BODMAS order applies: brackets first, then TI/MN/DV left to right, then AD left
-to right. The GEN1 interpreter evaluates only the first operand-operator-operand
-triple in a group; fully nested BODMAS is a microcode revision.
+- END  (001) - end program
+- MN   (010) - move
+- DV   (011) - divide
+- EQU  (100) - equal
+- IF   (101) - conditional
+- THEN (110) - branch target
+- GOTO (111) - unconditional jump
+
+## Variables and literals
+
+Variables `a`-`h` map to letter indices 0-7. Number literals 0-7 map directly.
+Johnsan expressions are balanced before code generation: every operator has
+matching operands and delimiters.
+
+## Balancing rules
+
+A Johnsan program is balanced when every opening delimiter has a matching
+closing delimiter and every operator has the operands it requires. The compiler
+rejects unbalanced programs before code generation.
