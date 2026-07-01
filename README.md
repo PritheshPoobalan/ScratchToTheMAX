@@ -1,59 +1,83 @@
 # ScratchToTheMAX
 
-BADD CPU — a 5-bit ThinkerBinary / RUN architecture proof of concept, with the
-Johnsan source language, the Johnsan kernel, and a system micro-kernel layer.
+ScratchToTheMAX - 64-bit OS with BADD CPU, Johnsan language, Johnsan kernel,
+micro-kernel architecture.
 
-## What this is
+This repository is a public open-source exploration of a small clean-sheet
+computing stack. It brings together a 5-bit ThinkerBinary CPU core (BADD), the
+Johnsan source language that targets it, a Johnsan kernel written in C, and a
+micro-kernel architecture that runs drivers and services as user-space servers.
 
-ScratchToTheMAX is the open-source home of the BADD MicroBeep R-A PoC (GEN1),
-a minimal 5-bit native-word CPU written for learners, FPGA implementers, and
-system-microcode authors. The design is intentionally tiny so that a single
-person can read the whole thing:
+## Contents
 
-- **5-bit ThinkerBinary words** — type tag in bits [4:3], payload in [2:0].
-- **Johnsan language** — STRT, VAR, AD, TI, PR, END, and friends, encoded to
-  ThinkerBinary words by the system microcode layer.
-- **johnsan_decode** — stateless 5-bit word decoder in Verilog.
-- **Micro-kernel** — fetch/decode/execute loop written in C, plus the Johnsan
-  kernel that translates Johnsan source into token streams.
-- **BADD chip RTL** — ALU, bit-addressable SRAM controller, BOR, MPU, PUF, and
-  eFlash dual-bank live update via INJ.
+- `badd_chip.v`          - BADD CPU RTL: ThinkerBinary ALU, memory controller,
+                           BOR/MPU/PUF security blocks, INJ live-update path.
+- `parts/johnsan_decode.v` - Johnsan 5-bit word opcode decoder.
+- `parts/badd_sram.v`    - bit-addressable SRAM controller.
+- `parts/advanced_mode.v` - advanced execution mode unit.
+- `parts/bodmas_eval.v`  - BODMAS expression evaluator.
+- `tests/`               - software tests and simulation harnesses.
+- `src/kernel/`          - Johnsan kernel (scheduler, memory, IPC).
+- `src/johnsan/`         - Johnsan compiler frontend and code generator.
+- `docs/`                - architecture and language documentation.
+- `examples/`            - example Johnsan programs.
 
-## Repository layout
+## Architecture
 
-```
-docs/          ISA reference, Johnsan language spec, micro-kernel design
-examples/      Johnsan example programs (.johnsan)
-src/kernel/    Micro-kernel and Johnsan kernel sources (C)
-src/verilog/   Johnsan decoder and BADD Verilog modules
-tests/         Verilog testbenches and C test harnesses
-badd_chip.v    Top-level BADD chip Verilog
-badd_tb.v      Chip testbench
-badd_sim       Built simulation binary
-badd_tb        Built testbench binary
-```
+ScratchToTheMAX follows a micro-kernel design. The Johnsan kernel is kept
+minimal: scheduling, address spaces, inter-process communication, and
+interrupt handling. Device drivers, filesystems, and the shell run as
+user-space servers that talk to the kernel through message passing. The whole
+stack targets the BADD CPU, whose 5-bit ThinkerBinary words are produced by the
+Johnsan compiler.
 
-## Build and run
+## BADD CPU
 
-Verilog testbenches build with Icarus Verilog:
+The BADD CPU is a 5-bit native-word core using the ThinkerBinary encoding and
+the RUN architecture. Each instruction word is exactly 5 bits: a 2-bit type tag
+and a 3-bit payload. Tags select between number literals, letter variables,
+direct syntax opcodes, and extended opcodes. The core includes an ALU, a
+bit-addressable SRAM controller, BOR/MPU/PUF security blocks, and an INJ
+eFlash live-update path.
 
-```bash
-iverilog -g2012 -o tb_johnsan_decode.vvp \
-    src/verilog/tb_johnsan_decode.v src/verilog/johnsan_decode.v
-vvp tb_johnsan_decode.vvp
-```
+## Johnsan language
 
-The C micro-kernel builds with any C99 compiler:
+Johnsan is the source language for BADD. It compiles to ThinkerBinary words and
+supports variables (a-h), number literals (0-7), direct syntax opcodes
+(STRT, AD, TI, PR, VAR), and extended opcodes (END, MN, DV, EQU, IF, THEN,
+GOTO). Programs are balanced expressions executed by the RUN machine.
 
-```bash
-cc -Wall -Wextra -o micro_kernel src/kernel/micro_kernel.c src/kernel/johnsan_kernel.c
-```
+## Getting started
 
-## License
+The BADD chip is simulatable with Icarus Verilog:
 
-MIT. See LICENSE.
+    iverilog -o badd_tb badd_chip.v badd_tb.v
+    vvp badd_tb
 
-## Public open-source rule
+The Johnsan kernel builds with a standard C compiler:
 
-No emojis in commit messages. This repository is public; every commit adds
-documentation, code, tests, or examples.
+    cc -c src/kernel/kern_main.c -o build/kern_main.o
+
+See `docs/build-run.md` for detailed build and run instructions.
+
+## Roadmap
+
+- BADD CPU PoC simulation (complete)
+- Johnsan language specification and encoder
+- Johnsan kernel: scheduler, memory, IPC
+- Micro-kernel server model
+- Self-hosting Johnsan compiler
+
+## Contributing
+
+See `CONTRIBUTING.md` for how to report bugs, submit patches, and propose
+architecture changes. All contributions are welcome.
+
+## Project structure
+
+- `docs/`           - architecture, language, ISA, security, build guides.
+- `src/kernel/`     - Johnsan kernel implementation in C.
+- `src/johnsan/`    - Johnsan compiler frontend and code generator.
+- `parts/`          - Verilog parts: decoder, SRAM, advanced mode, BODMAS.
+- `tests/`          - software unit tests and runner.
+- `examples/`       - example Johnsan programs.
