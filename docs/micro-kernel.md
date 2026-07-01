@@ -1,40 +1,32 @@
-# System Micro-Kernel Design
+# Micro-kernel Design
 
-The BADD micro-kernel sits between the Johnsan source language and the 5-bit
-hardware token stream. It is stored in eFlash and is updatable live through the
-INJ dual-bank mechanism.
+## Minimal kernel principle
 
-## Pipeline
+A micro-kernel keeps the trusted computing base small. In ScratchToTheMAX the
+kernel does not implement device drivers or filesystems. Those live in user
+space as servers. If a disk driver panics, only the disk server restarts; the
+kernel and other servers keep running.
 
-```
-Johnsan source
-      |
-      v
-Translator / system microcode  (eFlash, updatable)
-      |
-      v
-5-bit ThinkerBinary token stream
-      |
-      v
-johnsan_decode  ->  kind / code / is_delim / ext_op
-      |
-      v
-CPU group interpreter  ->  ALU / registers / LED15
-      |
-      v
-BADD silicon: SRAM, eFlash, SATA, PUF, MPU
-```
+## Inter-process communication
 
-## Responsibilities
+IPC is the primary interaction mechanism. A thread sends a message to a server
+and blocks until the server replies. The kernel copies the message between
+address spaces and schedules the receiver. This synchronous model makes server
+interfaces easy to reason about and test.
 
-1. **Keyword mapping** — owns the Johnsan-to-ThinkerBinary table. A revision can
-   change a mnemonic or add an escape-page operation without a new chip mask.
-2. **Live update** — can rewrite a program image in eFlash while the active bank
-   keeps executing; a commit write to `0x0FFF` toggles the active bank.
-3. **Translation contract** — direct opcode values are fixed because they are
-   wired into the decoder and CPU comparison logic.
+## Memory management
 
-## Micro-kernel source
+The kernel manages physical frames and maps pages into thread address spaces.
+User servers request memory through syscalls; the kernel tracks ownership and
+reclaims frames when a server exits.
 
-The C reference implementation of the micro-kernel fetch/decode/execute loop
-lives in `src/kernel/`. The Johnsan kernel (translator) lives next to it.
+## Drivers as servers
+
+Each device (serial, disk, network) has a user-space server that owns the
+device registers and answers client requests. The kernel only delivers
+interrupts to the owning server.
+
+## Failure isolation
+
+Because drivers run in user space, a driver fault is contained. The kernel
+restarts the faulty server without affecting other servers or applications.
