@@ -28,3 +28,10 @@ void kern_sched_run_once(void) {
 void kern_sched_tick(void) {
     kern_sched_run_once();
 }
+
+/* Scheduler statistics for observability. */
+static unsigned sched_ticks = 0;
+
+unsigned kern_sched_ticks(void) {
+    return sched_ticks;
+}
