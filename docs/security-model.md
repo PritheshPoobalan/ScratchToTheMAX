@@ -25,3 +25,8 @@ authenticated updates can be flashed.
 1. Verifier sends a challenge to the device.
 2. Device PUF computes a response from the challenge.
 3. Verifier checks the response against the enrolled identity.
+
+## Threat model
+
+The design assumes the kernel is trusted and user servers may be faulty or
+malicious. Hardware MPU and PUF enforce the boundaries between them.
