@@ -1,0 +1,9 @@
+STRT
+VAR a
+VAR b
+ADDI a, 5
+ADDI b, 7
+AD a, b
+PR a
+END
+; example2: computes 5 + 7 = 12
