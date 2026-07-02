@@ -21,3 +21,9 @@ Follow the existing indentation and naming conventions. Keep commits focused
 on a single change.
 
 Please open an issue before starting large changes.
+
+## Review checklist
+
+- Build succeeds.
+- Tests pass.
+- Commit message describes the change without emojis.
