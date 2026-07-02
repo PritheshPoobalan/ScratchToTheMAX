@@ -1,0 +1,8 @@
+STRT
+VAR a
+VAR b
+ADDI a, 2
+MN b, a
+AD b, b
+PR b
+END
