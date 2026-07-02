@@ -25,3 +25,8 @@ void kern_free_frame(int frame) {
 }
 
 /* Kernel invariant: free_count never exceeds FRAME_COUNT. */
+
+/* Dump free frame count for debugging. */
+int kern_mem_free_count(void) {
+    return free_count;
+}
