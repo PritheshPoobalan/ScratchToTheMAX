@@ -26,3 +26,8 @@ be patched without a cold reboot.
 ## Reference
 
 See `BADD_ISA.md` for the full instruction-set reference.
+
+## Design constraints
+
+Every instruction is one 5-bit word. The encoding favors simplicity over
+density so the PoC decoder stays small and easy to verify.
