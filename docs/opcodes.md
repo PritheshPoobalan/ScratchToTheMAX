@@ -26,3 +26,8 @@
 | 111     | GOTO     | unconditional jump |
 
 Payload 000 is the reserved prefix/page escape.
+
+## Encoding notes
+
+Direct opcodes use tag 11; extended opcodes use tag 00 with a 00000 prefix
+followed by the payload word. This keeps every word at exactly 5 bits.
