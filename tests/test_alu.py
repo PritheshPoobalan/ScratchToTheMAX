@@ -39,3 +39,7 @@ def test_zero_flag():
 
 def test_overflow_wrap():
     assert alu_op(0, 31, 1) == 0
+
+
+def test_negative_sub():
+    assert alu_op(1, 2, 10) == (2 - 10) & 0x1F
