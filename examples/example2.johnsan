@@ -7,3 +7,4 @@ AD a, b
 PR a
 END
 ; example2: computes 5 + 7 = 12
+; verified: result 12 fits in a 5-bit word
