@@ -53,3 +53,8 @@ rejects unbalanced programs before code generation.
 
 The program `STRT; VAR a; ADDI a, 10` encodes to a sequence of 5-bit
 ThinkerBinary words, one per token, terminated by the PARSE delimiter.
+
+## Grammar sketch
+
+program := statement*
+statement := opcode | variable | literal | delimiter
