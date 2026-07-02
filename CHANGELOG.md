@@ -12,3 +12,6 @@
 ## 0.2.0 (planned)
 - Johnsan compiler backend and code generation.
 - Micro-kernel server prototypes.
+## 0.3.0 (planned)
+- Self-hosting Johnsan compiler.
+- User-space server prototypes.
