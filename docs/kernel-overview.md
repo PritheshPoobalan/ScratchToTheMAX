@@ -27,3 +27,8 @@ written in C under `src/kernel/` and targets the BADD CPU.
 ## Build all kernel objects
 
     for c in src/kernel/*.c; do cc -I src/kernel -c "$c"; done
+
+## Kernel design goals
+
+Small, predictable, auditable. The kernel avoids dynamic memory allocation in
+the hot path and keeps scheduler decisions deterministic.
