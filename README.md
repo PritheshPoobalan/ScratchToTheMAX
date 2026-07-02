@@ -81,3 +81,7 @@ architecture changes. All contributions are welcome.
 - `parts/`          - Verilog parts: decoder, SRAM, advanced mode, BODMAS.
 - `tests/`          - software unit tests and runner.
 - `examples/`       - example Johnsan programs.
+
+## License
+
+MIT License. See `LICENSE`.
