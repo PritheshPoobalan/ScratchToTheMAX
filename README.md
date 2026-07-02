@@ -85,3 +85,7 @@ architecture changes. All contributions are welcome.
 ## License
 
 MIT License. See `LICENSE`.
+
+## Acknowledgements
+
+Thanks to contributors who improve the BADD CPU, Johnsan language, and kernel.
