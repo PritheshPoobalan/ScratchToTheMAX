@@ -40,3 +40,9 @@ def test_extended_prefix():
     kind, code, delim = decode(0b00000)
     assert kind == "extended"
     assert code == 0
+
+
+def test_number_payload_seven():
+    kind, code, delim = decode(0b10111)
+    assert kind == "number"
+    assert code == 7
