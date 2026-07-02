@@ -39,3 +39,8 @@ directly.
 
 A small kernel is easier to verify, audit, and trust. It also makes the system
 extensible: new servers can be added without touching the kernel.
+
+## Layering benefits
+
+Strict layering lets each layer be replaced independently: swap the BADD CPU
+for another core without changing the Johnsan kernel or servers.
