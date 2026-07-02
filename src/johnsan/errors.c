@@ -1,0 +1,6 @@
+/* errors.c - Johnsan compiler error reporting */
+#include <stdio.h>
+
+void johnsan_error(const char *msg) {
+    fprintf(stderr, "johnsan: error: %s\n", msg);
+}
