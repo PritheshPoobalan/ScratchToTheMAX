@@ -30,3 +30,8 @@ interrupts to the owning server.
 
 Because drivers run in user space, a driver fault is contained. The kernel
 restarts the faulty server without affecting other servers or applications.
+
+## Inter-server communication
+
+Servers expose well-known message ports. A client addresses a server by port
+number and waits for a reply, keeping the interaction model uniform.
