@@ -48,3 +48,8 @@ matching operands and delimiters.
 A Johnsan program is balanced when every opening delimiter has a matching
 closing delimiter and every operator has the operands it requires. The compiler
 rejects unbalanced programs before code generation.
+
+## Encoding example
+
+The program `STRT; VAR a; ADDI a, 10` encodes to a sequence of 5-bit
+ThinkerBinary words, one per token, terminated by the PARSE delimiter.
