@@ -1,0 +1,7 @@
+STRT
+VAR a
+ADDI a, 3
+IF a
+THEN 4
+PR a
+END
