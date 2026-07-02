@@ -1,0 +1,7 @@
+STRT
+VAR a
+ADDI a, 0
+GOTO 2
+ADDI a, 1
+PR a
+END
