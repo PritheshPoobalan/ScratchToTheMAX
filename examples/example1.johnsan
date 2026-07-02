@@ -1,0 +1,5 @@
+STRT
+VAR a
+ADDI a, 10
+PR a
+END
