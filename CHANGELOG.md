@@ -8,6 +8,7 @@
 
 ## 0.1.0 (planned)
 - First public release of ScratchToTheMAX.
+
 ## 0.2.0 (planned)
 - Johnsan compiler backend and code generation.
 - Micro-kernel server prototypes.
