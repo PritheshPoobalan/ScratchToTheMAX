@@ -37,3 +37,7 @@ Simulate all Verilog testbenches and inspect the waveform output.
 - Icarus Verilog (iverilog) for RTL simulation.
 - A C compiler (cc/gcc/clang) for the kernel.
 - Python 3 for software tests.
+
+## Continuous verification
+
+Run tests and simulation on every change before opening a pull request.
