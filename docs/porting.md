@@ -14,3 +14,8 @@ word, an MPU, and a timer interrupt. To port to a new target:
 
 A hosted C compiler and Icarus Verilog are sufficient to develop and test the
 kernel and compiler on a development machine.
+
+## Verification after port
+
+Run the Johnsan test suite and the BADD simulation on the new target before
+declaring the port complete.
