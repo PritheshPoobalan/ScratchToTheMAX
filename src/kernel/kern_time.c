@@ -10,3 +10,5 @@ long kern_time_ticks(void) {
 void kern_time_tick(void) {
     ticks++;
 }
+
+/* Tick frequency is one tick per timer interrupt. */
