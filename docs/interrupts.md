@@ -10,3 +10,8 @@ restores it after the handler runs.
 
 Exceptions such as illegal instructions, memory protection violations, and
 divide-by-zero are delivered as traps to `kern_trap`.
+
+## Interrupt nesting
+
+Interrupts are masked while the kernel handles a trap, preventing nested
+interrupts from corrupting kernel state.
