@@ -15,3 +15,6 @@
 ## 0.3.0 (planned)
 - Self-hosting Johnsan compiler.
 - User-space server prototypes.
+## 0.4.0 (planned)
+- Memory-protected user servers.
+- Network stack prototype.
