@@ -5,3 +5,4 @@ IF a
 THEN 4
 PR a
 END
+; conditional example: print a when nonzero
