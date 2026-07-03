@@ -9,3 +9,5 @@ python3 tests/test_ipc.py
 python3 tests/test_parser.py
 python3 tests/test_typecheck.py
 echo "All tests passed."
+
+# Add new test files here as they are created.
