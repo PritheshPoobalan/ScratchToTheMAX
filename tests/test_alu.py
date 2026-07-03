@@ -43,3 +43,7 @@ def test_overflow_wrap():
 
 def test_negative_sub():
     assert alu_op(1, 2, 10) == (2 - 10) & 0x1F
+
+
+def test_identity_add():
+    assert alu_op(0, 0, 0) == 0
