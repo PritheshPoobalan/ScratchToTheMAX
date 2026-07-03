@@ -14,3 +14,6 @@ int main(void) {
     kern_main();
     return 0;
 }
+
+/* Version string for the kernel build. */
+const char *kern_version = "0.1.0-dev";
