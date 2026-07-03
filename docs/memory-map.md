@@ -18,3 +18,8 @@ each (ThinkerBinary words). Addresses are 14 bits.
 
 The MPU restricts user-mode access to kernel ranges. Attempts to execute or
 write kernel memory from user mode trap to the kernel.
+
+## Device registers
+
+MMIO registers live above 0x4000 and are accessed through load/store
+instructions that the MPU guards for user-mode code.
