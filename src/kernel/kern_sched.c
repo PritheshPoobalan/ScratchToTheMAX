@@ -35,3 +35,8 @@ static unsigned sched_ticks = 0;
 unsigned kern_sched_ticks(void) {
     return sched_ticks;
 }
+
+/* Yield the CPU voluntarily from a running thread. */
+void kern_sched_yield(void) {
+    kern_sched_run_once();
+}
