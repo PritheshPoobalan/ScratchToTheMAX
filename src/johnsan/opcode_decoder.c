@@ -10,3 +10,5 @@ const char *johnsan_decode_kind(unsigned word) {
     default: return "extended";
     }
 }
+
+/* Unknown words default to extended kind for forward compatibility. */
