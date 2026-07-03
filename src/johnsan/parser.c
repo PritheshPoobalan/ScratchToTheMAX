@@ -6,3 +6,5 @@ int johnsan_parse(const char *src) {
     (void)src;
     return 0;
 }
+
+/* Parser errors are reported through johnsan_error. */
