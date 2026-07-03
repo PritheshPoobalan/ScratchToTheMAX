@@ -17,3 +17,5 @@ int johnsan_tokenize(const char *src, char *out, int out_size) {
 /* Skip leading whitespace before returning the next token. */
 
 /* Return the number of tokens written. */
+
+/* Tokens are single characters in the minimal frontend. */
