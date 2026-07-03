@@ -15,3 +15,7 @@ being committed. Unauthenticated images are rejected.
 
 If the new bank fails to boot, the CPU falls back to the previous bank,
 making updates safe by default.
+
+## Update safety
+
+Dual-bank updates with rollback ensure a bad image cannot brick the device.
