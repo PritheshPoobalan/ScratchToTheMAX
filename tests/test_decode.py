@@ -46,3 +46,9 @@ def test_number_payload_seven():
     kind, code, delim = decode(0b10111)
     assert kind == "number"
     assert code == 7
+
+
+def test_letter_payload_seven():
+    kind, code, delim = decode(0b01111)
+    assert kind == "letter"
+    assert code == 7
