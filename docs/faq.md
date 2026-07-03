@@ -18,3 +18,7 @@ services in user space.
 ## Can I simulate the BADD CPU?
 
 Yes. The Verilog RTL runs under Icarus Verilog. See `docs/build-run.md`.
+
+## How do I contribute?
+
+Open an issue, then submit a pull request with your change on a feature branch.
