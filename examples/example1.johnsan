@@ -3,3 +3,4 @@ VAR a
 ADDI a, 10
 PR a
 END
+; minimal program: declare a, add ten, print
