@@ -30,3 +30,8 @@ authenticated updates can be flashed.
 
 The design assumes the kernel is trusted and user servers may be faulty or
 malicious. Hardware MPU and PUF enforce the boundaries between them.
+
+## Secure boot
+
+The initial kernel image is verified against the PUF-derived identity before
+the CPU leaves reset, establishing a root of trust.
