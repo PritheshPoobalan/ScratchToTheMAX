@@ -9,3 +9,6 @@ long kern_syscall(int num, long a1, long a2, long a3) {
     default: return -1;
     }
 }
+
+/* Unknown syscalls return -ENOSYS. */
+#define KERN_ENOSYS -78
