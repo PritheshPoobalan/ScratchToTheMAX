@@ -30,3 +30,8 @@ void kern_free_frame(int frame) {
 int kern_mem_free_count(void) {
     return free_count;
 }
+
+/* Check whether a frame index is within range. */
+int kern_mem_frame_valid(int frame) {
+    return frame >= 0 && frame < FRAME_COUNT;
+}
