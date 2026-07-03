@@ -6,3 +6,5 @@ int kern_proc_create(void (*entry)(void)) {
     (void)entry;
     return -1;
 }
+
+/* Process states: runnable, blocked, exited. */
