@@ -41,3 +41,8 @@ Simulate all Verilog testbenches and inspect the waveform output.
 ## Continuous verification
 
 Run tests and simulation on every change before opening a pull request.
+
+## Troubleshooting
+
+If simulation does not start, check that iverilog is installed and the
+Verilog sources are in the current directory.
