@@ -20,3 +20,5 @@ int johnsan_sym_add(char name) {
     }
     return -1;
 }
+
+/* Variable names are limited to a-h (8 entries). */
