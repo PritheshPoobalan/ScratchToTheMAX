@@ -5,3 +5,5 @@
 void johnsan_codegen_emit(FILE *out, unsigned word) {
     fprintf(out, "%05u\n", word & 0x1F);
 }
+
+/* Words are written as five-bit zero-padded binary strings. */
