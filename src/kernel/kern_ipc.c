@@ -12,3 +12,6 @@ int kern_ipc_recv(int src, void *msg, unsigned len) {
     (void)src; (void)msg; (void)len;
     return 0;
 }
+
+/* Maximum IPC message size in bytes. */
+#define KERN_IPC_MAX 256
