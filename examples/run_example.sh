@@ -4,3 +4,5 @@ set -e
 SRC="$1"
 echo "Compiling $SRC ..."
 echo "Simulation not yet wired."
+
+# TODO: wire real compiler invocation here.
