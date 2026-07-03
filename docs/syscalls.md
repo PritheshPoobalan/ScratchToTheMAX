@@ -13,3 +13,8 @@
 Syscall number goes in a dedicated register; arguments follow. The kernel
 dispatches through `kern_syscall` and returns the result or a negative error
 code.
+
+## Error handling
+
+Negative return values indicate errors; zero or positive values indicate
+success or return the requested result.
