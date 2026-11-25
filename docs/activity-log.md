@@ -19,3 +19,4 @@
 - 2026-11-25T09:43:31Z | Create example input file
 - 2026-11-25T09:43:31Z | Document build and test steps
 - 2026-11-25T09:43:31Z | Add inline comments for complex logic
+- 2026-11-25T09:43:31Z | Update README with badges section
