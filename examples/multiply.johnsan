@@ -1,0 +1,6 @@
+STRT |
+VAR x EQU 4 |
+VAR y EQU 3 |
+VAR z EQU x TI y |
+PR z |
+END |

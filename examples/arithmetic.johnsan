@@ -1,0 +1,8 @@
+STRT |
+VAR a EQU 7 |
+VAR b EQU 2 |
+VAR diff EQU a MN b |
+VAR quot EQU a DV b |
+PR diff |
+PR quot |
+END |
