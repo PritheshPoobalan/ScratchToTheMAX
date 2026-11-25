@@ -5,4 +5,4 @@ VAR c EQU a AD b |
 PR c |
 END |
 
-// example ex1: add 1 and 3, print result
+// example ex1: add and print result
