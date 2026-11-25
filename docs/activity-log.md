@@ -63,3 +63,4 @@
 - 2026-11-25T09:43:32Z | Improve documentation consistency
 - 2026-11-25T09:43:32Z | Document logging configuration
 - 2026-11-25T09:43:32Z | Add example monitoring setup
+- 2026-11-25T09:43:32Z | Add comments for event handlers
