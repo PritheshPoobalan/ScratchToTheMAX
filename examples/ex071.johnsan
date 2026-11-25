@@ -1,0 +1,8 @@
+STRT |
+VAR a EQU 7 |
+VAR b EQU 3 |
+VAR c EQU a AD b |
+PR c |
+END |
+
+// example ex71: add and print result
