@@ -5,3 +5,4 @@
 - 2026-11-25T09:43:31Z | Clarify license information in README
 - 2026-11-25T09:43:31Z | Add code comments explaining main entry point
 - 2026-11-25T09:43:31Z | Add inline comments for function parameters
+- 2026-11-25T09:43:31Z | Document return values in source comments
