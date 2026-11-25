@@ -14,3 +14,4 @@
 - 2026-11-25T09:43:31Z | Update changelog with recent changes
 - 2026-11-25T09:43:31Z | Improve README formatting and structure
 - 2026-11-25T09:43:31Z | Add project architecture overview
+- 2026-11-25T09:43:31Z | Document dependency requirements
