@@ -12,3 +12,4 @@
 - 2026-11-25T09:43:31Z | Document environment variables
 - 2026-11-25T09:43:31Z | Add troubleshooting section to docs
 - 2026-11-25T09:43:31Z | Update changelog with recent changes
+- 2026-11-25T09:43:31Z | Improve README formatting and structure
