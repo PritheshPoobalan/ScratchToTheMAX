@@ -1,3 +1,4 @@
 - 2026-11-25T09:43:31Z | Update README project overview section
 - 2026-11-25T09:43:31Z | Add installation instructions to README
 - 2026-11-25T09:43:31Z | Add usage examples to README
+- 2026-11-25T09:43:31Z | Document contributing guidelines in README
