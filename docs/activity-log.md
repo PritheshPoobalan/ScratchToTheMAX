@@ -38,3 +38,4 @@
 - 2026-11-25T09:43:31Z | Add code comments for imports and modules
 - 2026-11-25T09:43:31Z | Improve README readability
 - 2026-11-25T09:43:31Z | Document known limitations
+- 2026-11-25T09:43:31Z | Add example commands block
