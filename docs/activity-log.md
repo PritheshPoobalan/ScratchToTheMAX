@@ -26,3 +26,4 @@
 - 2026-11-25T09:43:31Z | Document command-line options
 - 2026-11-25T09:43:31Z | Add code comments for data structures
 - 2026-11-25T09:43:31Z | Improve README installation troubleshooting
+- 2026-11-25T09:43:31Z | Add documentation for edge cases
