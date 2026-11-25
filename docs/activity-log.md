@@ -30,3 +30,4 @@
 - 2026-11-25T09:43:31Z | Create example test file
 - 2026-11-25T09:43:31Z | Document security considerations
 - 2026-11-25T09:43:31Z | Add comments for public API functions
+- 2026-11-25T09:43:31Z | Update README with support contact info
