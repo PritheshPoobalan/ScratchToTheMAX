@@ -1,0 +1,8 @@
+STRT |
+VAR a EQU 5 |
+VAR b EQU 3 |
+VAR c EQU a AD b |
+PR c |
+END |
+
+// example ex5: add and print result
