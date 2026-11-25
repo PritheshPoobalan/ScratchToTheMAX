@@ -1,0 +1,8 @@
+STRT |
+VAR a EQU 4 |
+VAR b EQU 3 |
+VAR c EQU a AD b |
+PR c |
+END |
+
+// example ex28: add and print result
