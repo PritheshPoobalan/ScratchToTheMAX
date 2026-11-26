@@ -1,0 +1,102 @@
+name: Bug Report
+description: Report a bug in BADD CPU, Johnsan compiler, or kernel
+title: "[BUG] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting a bug! Please fill out the sections below.
+
+  - type: dropdown
+    id: component
+    attributes:
+      label: Component
+      description: Which part of the stack is affected?
+      options:
+        - BADD CPU (Verilog RTL)
+        - Johnsan Compiler
+        - Johnsan Kernel
+        - Build System
+        - Documentation
+        - Examples/Tests
+        - Other
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: Version/Commit
+      description: Git commit hash or branch where bug occurs
+      placeholder: "main / abc1234"
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Bug Description
+      description: Clear description of the bug
+      placeholder: What happened?
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to Reproduce
+      description: Minimal steps to reproduce the bug
+      placeholder: |
+        1. Run `make sim`
+        2. Observe output...
+        3. Expected: ...
+        4. Actual: ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior
+      description: What should happen?
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual Behavior
+      description: What actually happens?
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs/Output
+      description: Paste relevant simulation output, compiler errors, or test failures
+      render: text
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Your build environment
+      placeholder: |
+        OS: Ubuntu 22.04
+        Icarus Verilog: 11.0
+        GCC: 11.4.0
+        Make: 4.3
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Checklist
+      options:
+        - label: I have searched existing issues for duplicates
+          required: true
+        - label: I can reproduce this on the latest main branch
+          required: true
+        - label: This is not a question or feature request
+          required: true

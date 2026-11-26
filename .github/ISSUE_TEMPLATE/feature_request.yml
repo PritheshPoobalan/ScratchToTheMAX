@@ -1,0 +1,84 @@
+name: Feature Request
+description: Propose a new feature or enhancement
+title: "[FEATURE] "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for suggesting a feature! Please describe your idea below.
+
+  - type: dropdown
+    id: component
+    attributes:
+      label: Component
+      description: Which part of the stack would this affect?
+      options:
+        - BADD CPU (Verilog RTL)
+        - Johnsan Compiler
+        - Johnsan Kernel
+        - Build System
+        - Documentation
+        - Examples/Tests
+        - CI/CD
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem Statement
+      description: What problem does this solve? Why is it needed?
+      placeholder: Currently, users cannot...
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed Solution
+      description: How should this work? Describe the feature.
+      placeholder: Add a new opcode/instruction/kernel feature that...
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives Considered
+      description: Other approaches you've thought about
+      placeholder: Could also be done by...
+
+  - type: textarea
+    id: impact
+    attributes:
+      label: Impact & Scope
+      description: What parts of the codebase would change? Breaking changes?
+      placeholder: |
+        - New file: parts/new_module.v
+        - Modify: badd_chip.v
+        - Update: docs/BADD_ISA.md
+        - Tests: tests/new_test.v
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      options:
+        - Low (nice to have)
+        - Medium (would improve project)
+        - High (important for roadmap)
+        - Critical (blocking)
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Checklist
+      options:
+        - label: I have searched existing issues for duplicates
+          required: true
+        - label: This aligns with the project's educational/research goals
+          required: true
+        - label: I'm willing to implement this (or help with implementation)
+          required: false

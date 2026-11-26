@@ -1,0 +1,37 @@
+# CODEOWNERS for ScratchToTheMAX
+# These users/groups will be automatically requested for review when changes are made to matching files.
+
+# Global owners - all changes require review from these users
+* @PritheshPoobalan
+
+# Documentation
+/docs/ @PritheshPoobalan
+
+# BADD CPU RTL (Verilog)
+/badd_chip.v @PritheshPoobalan
+/badd_chip.verified.v @PritheshPoobalan
+/badd_tb.v @PritheshPoobalan
+/tb_badd_chip.v @PritheshPoobalan
+/test_cpu.v @PritheshPoobalan
+/test_mem.v @PritheshPoobalan
+/parts/ @PritheshPoobalan
+/src/verilog/ @PritheshPoobalan
+
+# Johnsan Language & Compiler
+/src/johnsan/ @PritheshPoobalan
+/examples/ @PritheshPoobalan
+
+# Johnsan Kernel (C)
+/src/kernel/ @PritheshPoobalan
+
+# Tests
+/tests/ @PritheshPoobalan
+
+# Build system
+/Makefile @PritheshPoobalan
+
+# Configuration & Meta
+/.github/ @PritheshPoobalan
+/CODEOWNERS @PritheshPoobalan
+/CONTRIBUTING.md @PritheshPoobalan
+/SECURITY.md @PritheshPoobalan
