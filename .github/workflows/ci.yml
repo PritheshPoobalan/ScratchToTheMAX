@@ -192,6 +192,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
@@ -208,13 +210,14 @@ jobs:
         with:
           sarif_file: 'trivy-results.sarif'
 
-      - name: Check for secrets with TruffleHog
+      - name: Check for secrets with TruffleHog (PR only)
+        if: github.event_name == 'pull_request'
         uses: trufflesecurity/trufflehog@main
         with:
           path: ./
-          base: main
-          head: HEAD
-          fail: false
+          base: ${{ github.event.pull_request.base.sha }}
+          head: ${{ github.event.pull_request.head.sha }}
+          extra_args: --fail
 
   # Release build
   release:
