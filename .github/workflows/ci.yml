@@ -242,7 +242,7 @@ jobs:
           ls -lh *.tar.gz
 
       - name: Upload release assets
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v3
         with:
           files: scratchtothemax-${{ github.event.release.tag_name }}.tar.gz
         env:
