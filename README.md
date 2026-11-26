@@ -2,8 +2,8 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![CI](https://github.com/PritheshPoobalan/ScratchToTheMAX/actions/workflows/ci.yml/badge.svg)](https://github.com/PritheshPoobalan/ScratchToTheMAX/actions/workflows/ci.yml)
-[![GitHub stars](https://img.shields.io/github/stars/PritheshPoobalan/ScratchToTheMAX?style=social)](https://github.com/PritheshPoobalan/ScratchToTheMAX/stargazers)
-[![GitHub forks](https://img.shields.io/github/forks/PritheshPoobalan/ScratchToTheMAX?style=social)](https://github.com/PritheshPoobalan/ScratchToTheMAX/network)
+[![GitHub stars](https://img.shields.io/github/stars/PritheshPoobalan/ScratchToTheMAX?style=flat)](https://github.com/PritheshPoobalan/ScratchToTheMAX/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/PritheshPoobalan/ScratchToTheMAX?style=flat)](https://github.com/PritheshPoobalan/ScratchToTheMAX/network)
 
 **BADD CPU Architecture** — A 5-bit ThinkerBinary RISC-V compatible CPU with the Johnsan programming language, compiler, and micro-kernel operating system. An educational and research project featuring complete RTL (Verilog), ISA specification, kernel implementation, examples, and tests.
 
