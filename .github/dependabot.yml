@@ -1,32 +1,19 @@
-# Dependabot configuration for automated dependency updates
 version: 2
 updates:
-  # GitHub Actions updates
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "weekly"
       day: "monday"
-      time: "09:00"
+    open-pull-requests-limit: 5
     labels:
       - "dependencies"
-      - "github-actions"
-    commit-message:
-      prefix: "ci"
-      prefix-development: "ci"
-      include: "scope"
-
-  # Docker (if used in CI)
+      - "ci"
   - package-ecosystem: "docker"
     directory: "/"
     schedule:
       interval: "weekly"
       day: "monday"
-      time: "09:00"
+    open-pull-requests-limit: 5
     labels:
       - "dependencies"
-      - "docker"
-
-  # Note: This project uses system packages (iverilog, gcc) rather than
-  # language-specific package managers (npm, pip, cargo, etc.)
-  # System package updates are handled via the CI workflow's apt-get update
