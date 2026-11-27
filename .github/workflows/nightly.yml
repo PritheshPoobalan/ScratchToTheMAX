@@ -48,7 +48,7 @@ jobs:
 
       - name: Upload coverage report
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: nightly-coverage-${{ matrix.node-version }}
           path: coverage/
@@ -56,7 +56,7 @@ jobs:
 
       - name: Upload nightly test results
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: nightly-test-results-${{ matrix.node-version }}
           path: vitest-results/full-${{ matrix.node-version }}.xml
@@ -90,7 +90,7 @@ jobs:
       - name: Upload mutation testing report
         if: always()
         continue-on-error: true
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: mutation-report
           path: stryker-reports/
@@ -128,7 +128,7 @@ jobs:
       - name: Upload load test results
         if: always()
         continue-on-error: true
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: load-test-results
           path: |
