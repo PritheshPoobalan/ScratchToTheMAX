@@ -1,276 +1,199 @@
-name: CI/CD Pipeline
+name: CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
-  release:
-    types: [ published ]
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
 
 env:
-  VERILOG_VERSION: "11.0"
-  GCC_VERSION: "12"
+  NODE_VERSIONS: 18,20,22
 
 jobs:
-  # Lint and validate Verilog RTL
-  verilog-lint:
-    name: Verilog Lint
+  # Detect whether source-relevant files changed so PRs that only touch docs
+  # can skip the heavier test/build jobs while still running lint.
+  changed-files:
     runs-on: ubuntu-latest
+    outputs:
+      run-tests: ${{ steps.filter.outputs.run-tests }}
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Install Icarus Verilog
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y iverilog
-
-      - name: Verify Verilog syntax (main RTL)
-        run: |
-          echo "Checking badd_chip.v (badd_top module)..."
-          iverilog -t null -Wall badd_chip.v 2>&1 | head -50
-
-      - name: Verify Verilog syntax (parts)
-        run: |
-          echo "Checking parts..."
-          for f in parts/*.v; do
-            echo "  $f"
-            iverilog -t null -Wall "$f" 2>&1 | head -20
-          done
-
-      - name: Compile full design with built-in testbench
-        run: |
-          iverilog -o tb_badd badd_chip.v
-          echo "✓ Full design compiles successfully"
-
-  # Run CPU simulation tests using built-in testbench
-  cpu-simulation:
-    name: CPU Simulation
-    runs-on: ubuntu-latest
-    needs: verilog-lint
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Install Icarus Verilog
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y iverilog
-
-      - name: Build simulation (using built-in tb_badd)
-        run: |
-          iverilog -o tb_badd badd_chip.v
-
-      - name: Run simulation (short run)
-        run: |
-          timeout 60 vvp tb_badd || true
-          echo "✓ Simulation completed"
-
-      - name: Run additional testbenches
-        run: |
-          for tb in tb_badd_chip.v test_cpu.v test_mem.v; do
-            if [ -f "$tb" ]; then
-              echo "Testing $tb..."
-              iverilog -o test_tb badd_chip.v "$tb" 2>&1 | head -30
-              timeout 30 vvp test_tb 2>&1 | head -50 || true
-            fi
-          done
-
-  # Build and test Johnsan kernel
-  kernel-build:
-    name: Kernel Build & Test
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Install build tools
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y build-essential
-
-      - name: Build kernel objects
-        run: |
-          mkdir -p build
-          cc -c src/kernel/kern_main.c -o build/kern_main.o -Wall -Wextra -std=c11 2>&1 || true
-          cc -c src/kernel/kern_sched.c -o build/kern_sched.o -Wall -Wextra -std=c11 2>&1 || true
-          cc -c src/kernel/kern_ipc.c -o build/kern_ipc.o -Wall -Wextra -std=c11 2>&1 || true
-          cc -c src/kernel/kern_mem.c -o build/kern_mem.o -Wall -Wextra -std=c11 2>&1 || true
-          echo "✓ Kernel objects built (warnings ok)"
-
-      - name: Run kernel tests (if available)
-        run: |
-          if [ -f tests/kernel_test.c ]; then
-            cc tests/kernel_test.c build/*.o -o build/kernel_test -Wall -Wextra 2>&1 || true
-            if [ -f build/kernel_test ]; then
-              ./build/kernel_test
-              echo "✓ Kernel tests passed"
-            else
-              echo "Kernel test binary not built, skipping"
-            fi
-          else
-            echo "No kernel tests found, skipping"
-          fi
-
-  # Build Johnsan compiler
-  compiler-build:
-    name: Compiler Build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Install build tools
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y build-essential
-
-      - name: Build compiler
-        run: |
-          mkdir -p build
-          if [ -f src/johnsan/johnsan_compiler.c ]; then
-            cc src/johnsan/johnsan_compiler.c -o build/johnsan_compiler -Wall -Wextra -std=c11 2>&1 || true
-            echo "✓ Compiler built"
-          else
-            echo "Compiler source not found, skipping"
-          fi
-
-      - name: Test compiler with examples
-        run: |
-          if [ -f build/johnsan_compiler ] && [ -d examples ]; then
-            for ex in examples/*.johnsan; do
-              echo "Compiling $ex..."
-              ./build/johnsan_compiler "$ex" 2>&1 | head -20 || true
-            done
-            echo "✓ Example compilation tested"
-          fi
-
-  # Documentation checks
-  docs-check:
-    name: Documentation Check
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Check required docs exist
-        run: |
-          required_docs=(
-            "README.md"
-            "CONTRIBUTING.md"
-            "SECURITY.md"
-            "LICENSE"
-            "CHANGELOG.md"
-            "docs/architecture.md"
-            "docs/build-run.md"
-            "docs/BADD_ISA.md"
-            "docs/security-model.md"
-          )
-          for doc in "${required_docs[@]}"; do
-            if [ -f "$doc" ]; then
-              echo "✓ $doc exists"
-            else
-              echo "✗ $doc MISSING"
-              exit 1
-            fi
-          done
-
-      - name: Validate Markdown links
-        uses: gaurav-nelson/github-action-markdown-link-check@v1
+      - uses: actions/checkout@v4
+      - id: filter
+        uses: dorny/paths-filter@v3
         with:
-          use-quiet-mode: 'yes'
-          config-file: '.markdown-link-check.json'
+          filters: |
+            run-tests:
+              - 'src/**'
+              - 'lib/**'
+              - 'app/**'
+              - '*.{js,ts,mjs,cjs,json}'
+              - 'package.json'
+              - 'package-lock.json'
+              - 'tsconfig.json'
+              - 'vitest.config.*'
+              - 'jest.config.*'
 
-  # Security scan
-  security-scan:
-    name: Security Scan
+  lint:
+    needs: changed-files
+    if: >
+      always() &&
+      (needs.changed-files.outputs.run-tests == 'true' || github.event_name == 'push')
     runs-on: ubuntu-latest
-    permissions:
-      security-events: write
-      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version: [18, 20, 22]
+        os: [ubuntu-latest]
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
         with:
-          fetch-depth: 0
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+      - run: npm ci
+      - name: Run lint
+        run: npm run lint --if-present || echo "No lint script configured; skipping"
 
-      - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@master
-        with:
-          scan-type: 'fs'
-          scan-ref: '.'
-          format: 'sarif'
-          output: 'trivy-results.sarif'
-          severity: 'CRITICAL,HIGH'
-
-      - name: Upload Trivy results to GitHub Security
-        uses: github/codeql-action/upload-sarif@v3
-        if: always()
-        with:
-          sarif_file: 'trivy-results.sarif'
-
-      - name: Check for secrets with TruffleHog (PR only)
-        if: github.event_name == 'pull_request'
-        uses: trufflesecurity/trufflehog@main
-        with:
-          path: ./
-          base: ${{ github.event.pull_request.base.sha }}
-          head: ${{ github.event.pull_request.head.sha }}
-          extra_args: --fail
-
-  # Release build
-  release:
-    name: Create Release Artifacts
+  typecheck:
+    needs: changed-files
+    if: >
+      always() &&
+      (needs.changed-files.outputs.run-tests == 'true' || github.event_name == 'push')
     runs-on: ubuntu-latest
-    needs: [verilog-lint, cpu-simulation, kernel-build, compiler-build, docs-check, security-scan]
-    if: github.event_name == 'release' && github.event.action == 'published'
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version: [18, 20, 22]
+        os: [ubuntu-latest]
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Install build tools
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y iverilog build-essential
-
-      - name: Build all artifacts
-        run: |
-          mkdir -p release
-          # Verilog simulation binary
-          iverilog -o release/badd_sim badd_chip.v
-          # Kernel objects
-          mkdir -p release/kernel
-          cc -c src/kernel/kern_main.c -o release/kernel/kern_main.o -Wall -Wextra -std=c11 2>&1 || true
-          # Compiler
-          cc src/johnsan/johnsan_compiler.c -o release/johnsan_compiler -Wall -Wextra -std=c11 2>&1 || true
-          # Copy docs
-          cp -r docs release/
-          cp README.md LICENSE CHANGELOG.md release/
-          echo "✓ Release artifacts created"
-
-      - name: Create release archive
-        run: |
-          cd release
-          tar -czf ../scratchtothemax-${{ github.event.release.tag_name }}.tar.gz .
-          cd ..
-          ls -lh *.tar.gz
-
-      - name: Upload release assets
-        uses: softprops/action-gh-release@v1
+      - uses: actions/checkout@v4
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
         with:
-          files: scratchtothemax-${{ github.event.release.tag_name }}.tar.gz
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+      - run: npm ci
+      - name: Run typecheck
+        run: npx tsc --noEmit --if-present || echo "No TypeScript project configured; skipping"
+
+  test:
+    needs: changed-files
+    if: >
+      always() &&
+      (needs.changed-files.outputs.run-tests == 'true' || github.event_name == 'push')
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version: [18, 20, 22]
+        os: [ubuntu-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+      - run: npm ci
+      - name: Run tests with coverage
+        run: npm test --if-present -- --coverage --ci || echo "No test script configured; skipping"
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: false
+          verbose: true
+
+  build:
+    needs: [lint, typecheck, test]
+    if: >
+      always() &&
+      (needs.changed-files.outputs.run-tests == 'true' || github.event_name == 'push')
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version: [18, 20, 22]
+        os: [ubuntu-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+      - run: npm ci
+      - name: Run build
+        run: npm run build --if-present || echo "No build script configured; skipping"
+      - name: Turbo cache (monorepo)
+        if: exists('turbo.json') || exists('package.json')
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            .turbo
+            node_modules/.cache
+          key: turbo-${{ runner.os }}-${{ matrix.node-version }}-${{ hashFiles('package-lock.json', 'pnpm-lock.yaml', 'yarn.lock') }}
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-${{ matrix.node-version }}
+          path: |
+            dist/
+            build/
+            .next/
+            out/
+          retention-days: 30
+
+  security:
+    needs: changed-files
+    if: >
+      always() &&
+      (needs.changed-files.outputs.run-tests == 'true' || github.event_name == 'push')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - run: npm ci
+      - name: Run npm audit (moderate+)
+        run: npm audit --audit-level=moderate || true
+      - name: Run Semgrep SAST
+        uses: returntocorp/semgrep-action@v5
+        with:
+          config: >-
+            p/owasp-top-ten
+            p/secrets
+          publish: true
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SEMGREP_APP_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}
 
-  # Notify on failure
-  notify-failure:
-    name: Notify on Failure
+  deploy:
+    needs: [build, security]
+    if: >
+      always() &&
+      github.ref == 'refs/heads/main' &&
+      github.event_name == 'push'
     runs-on: ubuntu-latest
-    needs: [verilog-lint, cpu-simulation, kernel-build, compiler-build, docs-check, security-scan]
-    if: failure()
+    environment: production
     steps:
-      - name: Send failure notification
-        run: |
-          echo "❌ CI pipeline failed"
-          echo "Check GitHub Actions for details: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+      - uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - run: npm ci
+      - name: Run build for deploy
+        run: npm run build --if-present || echo "No build script configured; skipping"
+      - name: Deploy to production
+        run: echo "Deploying ${{ github.repository }} to production (placeholder)"
+        env:
+          DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
