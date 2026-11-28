@@ -122,7 +122,7 @@ jobs:
 
       - name: Upload coverage report
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: coverage-unit-${{ matrix.node-version }}
           path: coverage/
@@ -130,7 +130,7 @@ jobs:
 
       - name: Upload unit test results
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: test-results-unit-${{ matrix.node-version }}
           path: vitest-results/unit-${{ matrix.node-version }}.xml
@@ -168,7 +168,7 @@ jobs:
 
       - name: Upload integration test results
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: test-results-integration-${{ matrix.node-version }}
           path: vitest-results/integration-${{ matrix.node-version }}.xml
@@ -211,7 +211,7 @@ jobs:
 
       - name: Upload E2E traces and screenshots
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: e2e-results-${{ matrix.browser }}
           path: |
@@ -256,7 +256,7 @@ jobs:
 
       - name: Upload visual regression artifacts
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: visual-regression-${{ matrix.browser }}
           path: |
@@ -362,7 +362,7 @@ jobs:
           key: turbo-${{ runner.os }}-node${{ matrix.node-version }}-${{ hashFiles('package-lock.json') }}
 
       - name: Upload build artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: build-output-${{ matrix.node-version }}
           path: dist/
